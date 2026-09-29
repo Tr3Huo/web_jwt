@@ -1,7 +1,6 @@
 package com.example.demo.exceptions;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.security.SignatureException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
@@ -33,12 +32,12 @@ public class GlobalExceptionHandler {
             errorDetail.setProperty("description", "You are not authorized to access this resource");
             return errorDetail;
         }
-        if (exception instanceof SignatureException) {
+        if (exception.getMessage() != null && exception.getMessage().contains("Invalid token signature")) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
             errorDetail.setProperty("description", "The JWT signature is invalid");
             return errorDetail;
         }
-        if (exception instanceof ExpiredJwtException) {
+        if (exception.getMessage() != null && exception.getMessage().contains("expired")) {
             errorDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
             errorDetail.setProperty("description", "The JWT token has expired");
             return errorDetail;
